@@ -1,15 +1,23 @@
 {
   "name": "@litejs/zip",
   "version": "23.8.0",
+  "description": "Create zip files",
   "license": "MIT",
+  "author": "Lauri Rooden <lauri@rooden.ee>",
+  "keywords": [
+    "zip",
+    "litejs"
+  ],
+  "main": "zip.js",
   "files": [
-    "*.js"
   ],
   "repository": "github:litejs/zip",
   "scripts": {
-    "test": "lj test --coverage --brief test/index.js"
+    "lint": "jshint --config .github/jshint.json *.js",
+    "test": "TZ='Europe/Tallinn' lj t test/index.js"
   },
   "devDependencies": {
-    "@litejs/cli": "23.8.0"
+    "@litejs/cli": "23.11.1",
+    "jshint": "2.13.6"
   }
 }
