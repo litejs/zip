@@ -1,13 +1,13 @@
 
 
-!function(exports, unescape, encodeURIComponent) {
+!function(exports, unescape, encodeURIComponent, Uint8Array) {
 	/* globals Blob, Promise, Response */
 
 	exports.createZip = createZip
 
 	function createZip(files, next) {
 		var i = 256, j, k, offset = 0
-		, crcTable = []
+		, crcTable = new Int32Array(256)
 		, cd = ""
 		, ent = []
 		, CompressionStream = (exports.window || global).CompressionStream
@@ -23,8 +23,8 @@
 		}
 		, now = Date.now()
 
-		for (; --i; crcTable[i] = k) {
-			k = i
+		for (; i; crcTable[i] = k) {
+			k = --i
 			for (j = 8; j--; ) k = (k & 1) ? 0xedb88320 ^ (k >>> 1) : (k >>> 1)
 		}
 
@@ -72,5 +72,5 @@
 		for (var i = str.length, arr = new Uint8Array(i); i--; arr[i] = str.charCodeAt(i));
 		return arr
 	}
-}(this, unescape, encodeURIComponent) // jshint ignore:line
+}(this, unescape, encodeURIComponent, Uint8Array) // jshint ignore:line
 
