@@ -19,7 +19,7 @@ Examples
 const { createZip } = require("@litejs/zip");
 const fileBlob = await createZip([
     { name: "file-a.txt", content: "Some content" },
-    { name: "file-b.txt", content: Uint8Array.from("012"), time: new Date(2020, 1, 21) },
+    { name: "dir/file-b.txt", content: Uint8Array.from("012"), time: new Date(2020, 1, 21) },
 ])
 ```
 
