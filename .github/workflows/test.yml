@@ -38,12 +38,11 @@ jobs:
     - run: |
         gh release create $TAG --title $TAG --notes "$(git tag -l --format='%(subject)%0a%0a%(body)' $TAG)"
         gh run list --json databaseId  -q '.[20:]|.[].databaseId' --limit 100 | xargs -I{} gh run delete "{}"
-        [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] && echo "PUBLISH=true" >> $GITHUB_ENV
+        [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] && echo "PUBLISH=latest" || echo "PUBLISH=next" >> $GITHUB_ENV
       env:
         GH_TOKEN: ${{ github.token }}
         TAG: ${{ github.ref_name }}
-    - run: npm publish --access public
-      if: env.PUBLISH == 'true'
+    - run: npm publish --access public --tag $PUBLISH
       env:
         NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
