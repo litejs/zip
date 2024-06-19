@@ -10,7 +10,9 @@
 LiteJS Zip &ndash; [![Coverage][1]][2] [![Size][3]][4] [![Buy Me A Tea][5]][6]
 ==========
 
-Create ZIP files in JavaScript.
+Dependency-free JavaScript library for creating ZIP files (~1.2KB).
+Uses the CompressionStream API if available; otherwise will generate uncompressed ZIP.
+
 
 Examples
 --------
@@ -29,7 +31,7 @@ Follow [Coding Style Guide](https://github.com/litejs/litejs/wiki/Style-Guide),
 run tests `npm install; npm test`.
 
 
-> Copyright (c) 2023 Lauri Rooden &lt;lauri@rooden.ee&gt;  
+> Copyright (c) 2023-2024 Lauri Rooden &lt;lauri@rooden.ee&gt;  
 [MIT License](https://litejs.com/MIT-LICENSE.txt) |
 [GitHub repo](https://github.com/litejs/zip) |
 [npm package](https://npmjs.org/package/@litejs/zip) |
