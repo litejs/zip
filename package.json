@@ -12,7 +12,7 @@
   "files": [],
   "repository": "github:litejs/zip",
   "scripts": {
-    "lint": "jshint --config .github/jshint.json *.js",
+    "lint": "npx jshint -c .github/jshint.json *.js",
     "test": "lj t --tz='Europe/Tallinn' test/index.js"
   },
   "devDependencies": {
