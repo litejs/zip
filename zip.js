@@ -11,16 +11,6 @@
 		, cd = ""
 		, ent = []
 		, CompressionStream = (exports.window || global).CompressionStream
-		, compress = CompressionStream ? function(uint, cb) {
-			new Response(
-				new Blob([uint]).stream().pipeThrough(new CompressionStream("deflate"))
-			).arrayBuffer().then(function(arr) {
-				if (uint.length > arr.byteLength - 6) cb(new Uint8Array(arr).subarray(2, -4), "\10\0")
-				else cb(uint, "\0\0")
-			})
-		} : function(uint, cb) {
-			cb(uint, "\0\0")
-		}
 		, now = Date.now()
 
 		for (; i; crcTable[i] = k) {
@@ -58,6 +48,16 @@
 				offset += 30 + compressed.length + nameLen
 				add(resolve)
 			})
+		}
+		function compress(uint, cb) {
+			if (CompressionStream) new Response(
+				new Blob([uint]).stream().pipeThrough(new CompressionStream("deflate"))
+			).arrayBuffer().then(resolve)
+			else resolve(resolve)
+			function resolve(arr) {
+				if (uint.length > arr.byteLength - 6) cb(new Uint8Array(arr).subarray(2, -4), "\10\0")
+				else cb(uint, "\0\0")
+			}
 		}
 	}
 
