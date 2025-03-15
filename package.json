@@ -16,6 +16,6 @@
     "test": "lj t --tz='Europe/Tallinn' test/index.js"
   },
   "devDependencies": {
-    "@litejs/cli": "24.10.0"
+    "@litejs/cli": "25.1.1"
   }
 }

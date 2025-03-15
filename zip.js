@@ -65,7 +65,6 @@
 	function le32(n) {
 		return String.fromCharCode(n & 0xff, (n >>> 8) & 0xff, (n >>> 16) & 0xff, (n >>> 24) & 0xff)
 	}
-
 	function toUint(str) {
 		for (var i = str.length, arr = new Uint8Array(i); i--; arr[i] = str.charCodeAt(i));
 		return arr
