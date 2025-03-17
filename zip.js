@@ -25,7 +25,7 @@
 			k = files[i++]
 			if (!k) {
 				k = files.length
-				ent.push(toUint(cd + le32(0x06054b50) + le32(0) + le32((k<<16) + k) + le32(cd.length) + le32(offset) + "\0\0"))
+				ent.push(toUint(cd + "PK\5\6" + le32(0) + le32((k<<16) + k) + le32(cd.length) + le32(offset) + "\0\0"))
 				return resolve(new Blob(ent, { type: "application/zip" }))
 			}
 			var name = unescape(encodeURIComponent(k.name))
