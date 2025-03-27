@@ -1,11 +1,11 @@
 
 
+/* globals Blob, Promise, Response */
+
 !function(exports, unescape, encodeURIComponent, Uint8Array) {
-	/* globals Blob, Promise, Response */
 
-	exports.createZip = createZip
-
-	function createZip(files, next) {
+	// Attach createZip to `window` in non-module context
+	exports.createZip = function(files, next) {
 		var i = 256, j, k, offset = 0
 		, crcTable = []
 		, cd = ""
@@ -69,5 +69,7 @@
 		for (var i = str.length, arr = new Uint8Array(i); i--; arr[i] = str.charCodeAt(i));
 		return arr
 	}
+
+// this is `exports` in module and `window` in browser
 }(this, unescape, encodeURIComponent, Uint8Array) // jshint ignore:line
 
