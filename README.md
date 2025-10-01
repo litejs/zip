@@ -10,7 +10,7 @@
 LiteJS Zip &ndash; [![Coverage][1]][2] [![Size][3]][4] [![Buy Me A Tea][5]][6]
 ==========
 
-Dependency-free JavaScript library for creating ZIP files (~1.2KB).
+Dependency-free JavaScript library for creating ZIP files (~1.2KB) in Browser or Server.
 Uses the CompressionStream API if available; otherwise will generate uncompressed ZIP.
 
 

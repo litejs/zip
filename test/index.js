@@ -4,7 +4,6 @@ describe("zip", function() {
 	var createZip = require("..").createZip
 
 	test("test uncompressed", function(assert, mock) {
-		mock.swap(Date, "now", mock.fn(1514900750001))
 		mock.swap(global, "CompressionStream", null)
 
 		createZip(["file-a.txt", "õöü.txt"].map(dummyFile))
@@ -16,9 +15,10 @@ describe("zip", function() {
 		})
 	})
 
-	test("test compressed", function(assert, mock) {
-		mock.swap(Date, "now", mock.fn(1514900750001))
+	test("test compressed", typeof CompressionStream !== "undefined" && typeof Response !== "undefined" && function(assert, mock) {
+		mock.swap(Date, "now", mock.fn(1514900760000))
 		var files = ["ä.txt", "õ", "ö.txt"].map(dummyFile)
+		files[0].time = null
 		files[1].time = Date.UTC(2001,1,22,1,2,4)
 		createZip(files, function(err, zip) {
 			assert.matchSnapshot("test/snap/compressed.zip", zip)
@@ -27,7 +27,7 @@ describe("zip", function() {
 	})
 
 	function dummyFile(name, i) {
-		return { name: name, content: "File: " + name + "\nContent: äõöüSome stuff".repeat(i+1) }
+		return { name: name, content: "File: " + name + "\nContent: äõöüSome stuff".repeat(i+1), time: 1514900750001 }
 	}
 })
 
