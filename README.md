@@ -19,7 +19,7 @@ Examples
 
 ```javascript
 const { createZip } = require("@litejs/zip");
-const fileBlob = await createZip([
+const fileAsUint8Array = await createZip([
     { name: "file-a.txt", content: "Some content" },
     { name: "dir/file-b.txt", content: Uint8Array.from("012"), time: new Date(2020, 1, 21) },
 ])
@@ -31,7 +31,7 @@ Follow [Coding Style Guide](https://github.com/litejs/litejs/wiki/Style-Guide),
 run tests `npm install; npm test`.
 
 
-> Copyright (c) 2023-2024 Lauri Rooden &lt;lauri@rooden.ee&gt;  
+> Copyright (c) 2023-2025 Lauri Rooden &lt;lauri@rooden.ee&gt;  
 [MIT License](https://litejs.com/MIT-LICENSE.txt) |
 [GitHub repo](https://github.com/litejs/zip) |
 [npm package](https://npmjs.org/package/@litejs/zip) |

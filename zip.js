@@ -9,9 +9,15 @@
 		var i = 256, j, k, offset = 0
 		, crcTable = []
 		, cd = ""
-		, ent = []
+		, out = []
+		, outLen = 0
 		, CompressionStream = (exports.window || global).CompressionStream
 		, now = Date.now()
+
+		function push(arr) {
+			out.push(arr)
+			outLen += arr.length
+		}
 
 		for (; i; crcTable[i] = k) {
 			k = --i
@@ -25,8 +31,10 @@
 			k = files[i++]
 			if (!k) {
 				k = files.length
-				ent.push(toUint(cd + "PK\5\6" + le32(0) + le32((k<<16) + k) + le32(cd.length) + le32(offset) + "\0\0"))
-				return resolve(new Blob(ent, { type: "application/zip" }))
+				push(toUint(cd + "PK\5\6" + le32(0) + le32((k<<16) + k) + le32(cd.length) + le32(offset) + "\0\0"))
+				file = new Uint8Array(outLen)
+				for (i = 0, offset = 0; (j = out[i++]); offset += j.length) file.set(j, offset);
+				return resolve(file)
 			}
 			var name = unescape(encodeURIComponent(k.name))
 			, file = k.content
@@ -41,7 +49,8 @@
 			}
 			compress(file, function(compressed, method) {
 				var header = le32(20 | 1<<27) + method + le32(dosDate(new Date(k.time || now))) + le32(-1^crc >>> 0) + le32(compressed.length) + le32(rawSize) + le32(nameLen)
-				ent.push(toUint("PK\3\4" + header + name), compressed)
+				push(toUint("PK\3\4" + header + name))
+				push(compressed)
 				cd += "PK\1\2\0\24" + header + "\0\0" + le32(0) + le32(32) + le32(offset) + name
 				offset += 30 + compressed.length + nameLen
 				add(resolve)
