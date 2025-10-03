@@ -66,7 +66,7 @@
 
 		for (; i; crcTable[i] = k) {
 			k = --i
-			for (j = 8; j--; ) k = (k & 1) ? 0xedb88320 ^ (k >>> 1) : (k >>> 1)
+			for (j = 8; j--; ) k = 0xedb88320 * (1&k) ^ k >>> 1
 		}
 
 		if (!next) return new Promise(add)
