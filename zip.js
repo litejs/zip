@@ -5,7 +5,11 @@
 !((exports, unescape, encodeURIComponent, Uint8Array) => {
 
 	// Attach createZip to `window` in non-module context
-	exports.createZip = (files, next) => {
+	exports.createZip = (files, opts, next) => {
+		if (typeof opts == "function") {
+			next = opts
+			opts = {}
+		}
 		var i = 256, j, k, offset = 0
 		, crcTable = []
 		, cd = ""
@@ -23,12 +27,20 @@
 			for (var pos = str.length, arr = new Uint8Array(pos); pos--; arr[pos] = str.charCodeAt(pos));
 			return arr
 		}
-		, compress = (uint, cb) => {
-			if (CompressionStream) {
+		, compress = (uint, len, cb) => {
+			if (opts && opts.deflate) {
+				var compressed = opts.deflate(uint)
+				if (len > compressed.length) {
+					cb(compressed, "\10\0")
+				} else {
+					cb(uint, "\0\0")
+				}
+
+			} else if (CompressionStream) {
 				new Response(
 					new Blob([uint]).stream().pipeThrough(new CompressionStream("deflate"))
 				).arrayBuffer().then(arr => {
-					if (uint.length > arr.byteLength - 6) cb(new Uint8Array(arr).subarray(2, -4), "\10\0")
+					if (len > arr.byteLength - 6) cb(new Uint8Array(arr).subarray(2, -4), "\10\0")
 					else cb(uint, "\0\0")
 				})
 			} else cb(uint, "\0\0")
@@ -42,20 +54,20 @@
 				for (i = 0, offset = 0; (j = out[i++]); offset += j.length) file.set(j, offset);
 				return resolve(file)
 			}
-			var rawSize
+			var fileLen
 			, name = unescape(encodeURIComponent(k.name))
-			, file = k.content
 			, nameLen = name.length
+			, file = k.content
 			, crc = -1
 
 			if (typeof file === "string") file = toUint(unescape(encodeURIComponent(file)))
-			rawSize = file.length
+			fileLen = file.length
 
-			for (j = 0; j < rawSize; ) {
+			for (j = 0; j < fileLen; ) {
 				crc = (crc >>> 8) ^ crcTable[(crc ^ file[j++]) & 0xff]
 			}
-			compress(file, (compressed, method) => {
-				method = le32(20 | 1<<27) + method + le32(dosDate(new Date(k.time || now))) + le32(-1^crc >>> 0) + le32(compressed.length) + le32(rawSize) + le32(nameLen)
+			compress(file, fileLen, (compressed, method) => {
+				method = le32(20 | 1<<27) + method + le32(dosDate(new Date(k.time || now))) + le32(-1^crc >>> 0) + le32(compressed.length) + le32(fileLen) + le32(nameLen)
 				push(toUint("PK\3\4" + method + name))
 				push(compressed)
 				cd += "PK\1\2\0\24" + method + "\0\0" + le32(0) + le32(32) + le32(offset) + name

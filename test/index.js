@@ -1,6 +1,7 @@
 
 describe("zip", function() {
 	require("@litejs/cli/snapshot.js")
+	var zlib = require("zlib")
 	var createZip = require("..").createZip
 
 	test("test uncompressed", function(assert, mock) {
@@ -21,6 +22,22 @@ describe("zip", function() {
 		files[0].time = null
 		files[1].time = Date.UTC(2001,1,22,1,2,4)
 		createZip(files, function(err, zip) {
+			assert.matchSnapshot("test/snap/compressed.zip", zip)
+			assert.end()
+		})
+	})
+
+	// Older zlib is producing different binary
+	test("test zlib", parseInt(process.versions.node) >= 20 && function(assert, mock) {
+		mock.swap(Date, "now", mock.fn(1514900760000))
+		var files = [
+			"abcdefghijklmnopqrstuvõäöü4€!@#$.txt",
+			"\n",
+			"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.txt",
+		].map(dummyFile)
+		files[0].time = null
+		files[1].time = Date.UTC(2001,1,22,1,2,4)
+		createZip(files, { deflate: file =>zlib.deflateRawSync(file, {level:6}) }, function(err, zip) {
 			assert.matchSnapshot("test/snap/compressed.zip", zip)
 			assert.end()
 		})
