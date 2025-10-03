@@ -30,20 +30,14 @@
 		, compress = (uint, len, cb) => {
 			if (opts && opts.deflate) {
 				var compressed = opts.deflate(uint)
-				if (len > compressed.length) {
-					cb(compressed, "\10\0")
-				} else {
-					cb(uint, "\0\0")
-				}
-
+				cb(len > compressed.length ? compressed : uint)
 			} else if (CompressionStream) {
 				new Response(
 					new Blob([uint]).stream().pipeThrough(new CompressionStream("deflate"))
 				).arrayBuffer().then(arr => {
-					if (len > arr.byteLength - 6) cb(new Uint8Array(arr).subarray(2, -4), "\10\0")
-					else cb(uint, "\0\0")
+					cb(len > arr.byteLength - 6 ? new Uint8Array(arr).subarray(2, -4) : uint)
 				})
-			} else cb(uint, "\0\0")
+			} else cb(uint)
 		}
 		, add = resolve => {
 			k = files[i++]
@@ -67,6 +61,7 @@
 				crc = (crc >>> 8) ^ crcTable[(crc ^ file[j++]) & 0xff]
 			}
 			compress(file, fileLen, (compressed, method) => {
+				method = file === compressed ? "\0\0" : "\10\0"
 				method = le32(20 | 1<<27) + method + le32(dosDate(new Date(k.time || now))) + le32(-1^crc >>> 0) + le32(compressed.length) + le32(fileLen) + le32(nameLen)
 				push(toUint("PK\3\4" + method + name))
 				push(compressed)
