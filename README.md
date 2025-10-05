@@ -10,19 +10,39 @@
 LiteJS Zip &ndash; [![Coverage][1]][2] [![Size][3]][4] [![Buy Me A Tea][5]][6]
 ==========
 
-Dependency-free JavaScript library for creating ZIP files (~1.2KB) in Browser or Server.
-Uses the CompressionStream API if available; otherwise will generate uncompressed ZIP.
+Lightweight (~1.2KB) ZIP file creator for Browser and Node.js. No dependencies.  
+Uses the CompressionStream API when available; otherwise will generate uncompressed ZIP.
+
+
+createZip(files [, options] [, callback])
+
+ - files: Array of `{name, content[, time]}`
+ - options: `{ deflate: deflateRawSync }` (optional custom deflater makes ZIP creation synchronous)
+ - callback: Optional `(err, zip)` callback
+
+Returns a `Promise<Uint8Array>`, or invokes provided `callback`, or the ZIP synchronously when using a custom deflater.
 
 
 Examples
 --------
 
 ```javascript
-const { createZip } = require("@litejs/zip");
-const fileAsUint8Array = await createZip([
+const { createZip } = require("@litejs/zip")
+
+// Async usage
+const zipUint8Array = await createZip([
     { name: "file-a.txt", content: "Some content" },
     { name: "dir/file-b.txt", content: Uint8Array.from("012"), time: new Date(2020, 1, 21) },
 ])
+
+// Callback style
+createZip(files, (err, zipUint8Array) => {
+    // Handle ZIP file content
+})
+
+// With custom deflate runs synchronously
+const zlib = require("zlib")
+const zipInSync = createZip(files, { deflate: zlib.deflateRawSync })
 ```
 
 ## Contributing
