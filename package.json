@@ -9,6 +9,7 @@
     "litejs"
   ],
   "main": "zip.js",
+  "type": "commonjs",
   "files": [],
   "repository": "github:litejs/zip",
   "scripts": {
