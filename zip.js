@@ -2,7 +2,7 @@
 
 /* globals Blob, Promise, Response */
 
-;((exports, unescape, encodeURIComponent, Uint8Array) => {
+;((exports, Uint8Array) => {
 
 	// Attach createZip to `window` in non-module context
 	exports.createZip = (files, opts, next) => {
@@ -28,6 +28,7 @@
 			for (var pos = str.length, arr = new Uint8Array(pos); pos--; arr[pos] = str.charCodeAt(pos));
 			return arr
 		}
+		, toUtf8 = str => unescape(encodeURIComponent(str || ""))
 		, compress = (uint, len, cb) => {
 			if (opts && opts.deflate) {
 				var compressed = opts.deflate(uint)
@@ -44,19 +45,19 @@
 			k = files[i++]
 			if (!k) {
 				k = files.length
-				name = unescape(encodeURIComponent(opts && opts.comment || ""))
+				name = toUtf8(opts && opts.comment)
 				push(toUint(cd + "PK\5\6" + le32(0) + le32((k<<16) + k) + le32(cd.length) + le32(offset) + le16(name.length) + name))
 				file = new Uint8Array(outLen)
 				for (i = 0, offset = 0; (j = out[i++]); offset += j.length) file.set(j, offset);
 				return resolve(file)
 			}
 			var fileLen
-			, name = unescape(encodeURIComponent(k.name))
+			, name = toUtf8(k.name)
 			, nameLen = name.length
 			, file = k.content
 			, crc = -1
 
-			if (typeof file === "string") file = toUint(unescape(encodeURIComponent(file)))
+			if (typeof file === "string") file = toUint(toUtf8(file))
 			fileLen = file.length
 
 			for (j = 0; j < fileLen; ) {
@@ -83,5 +84,5 @@
 	}
 
 // this is `exports` in module and `window` in browser
-})(this, unescape, encodeURIComponent, Uint8Array) // jshint ignore:line
+})(this, Uint8Array) // jshint ignore:line
 

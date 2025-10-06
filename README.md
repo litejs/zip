@@ -10,7 +10,7 @@
 LiteJS Zip &ndash; [![Coverage][1]][2] [![Size][3]][4] [![Buy Me A Tea][5]][6]
 ==========
 
-Lightweight (~1.2KB) ZIP file creator for Browser and Node.js. No dependencies.  
+Lightweight (~1.3KB) ZIP file creator for Browser and Node.js. No dependencies.  
 Uses the CompressionStream API when available; otherwise will generate uncompressed ZIP.
 
 
