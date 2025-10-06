@@ -22,7 +22,8 @@
 			outLen += arr.length
 		}
 		, dosDate = date => date.getSeconds() >> 1 | date.getMinutes() << 5 | date.getHours() << 11 | date.getDate() << 16 | (date.getMonth() + 1) << 21 | (date.getFullYear() - 1980) << 25
-		, le32 = n => String.fromCharCode(n & 0xff, (n >>> 8) & 0xff, (n >>> 16) & 0xff, (n >>> 24) & 0xff)
+		, le16 = n => String.fromCharCode(n & 0xff, (n >>> 8) & 0xff)
+		, le32 = n => le16(n) + le16(n >>> 16)
 		, toUint = str => {
 			for (var pos = str.length, arr = new Uint8Array(pos); pos--; arr[pos] = str.charCodeAt(pos));
 			return arr
@@ -43,7 +44,8 @@
 			k = files[i++]
 			if (!k) {
 				k = files.length
-				push(toUint(cd + "PK\5\6" + le32(0) + le32((k<<16) + k) + le32(cd.length) + le32(offset) + "\0\0"))
+				name = unescape(encodeURIComponent(opts && opts.comment || ""))
+				push(toUint(cd + "PK\5\6" + le32(0) + le32((k<<16) + k) + le32(cd.length) + le32(offset) + le16(name.length) + name))
 				file = new Uint8Array(outLen)
 				for (i = 0, offset = 0; (j = out[i++]); offset += j.length) file.set(j, offset);
 				return resolve(file)

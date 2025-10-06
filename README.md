@@ -17,7 +17,7 @@ Uses the CompressionStream API when available; otherwise will generate uncompres
 createZip(files [, options] [, callback])
 
  - files: Array of `{name, content[, time]}`
- - options: `{ deflate: deflateRawSync }` (optional custom deflater makes ZIP creation synchronous)
+ - options: `{ deflate: deflateRawSync, comment: 'Comment for a file' }` (optional custom deflater makes ZIP creation synchronous)
  - callback: Optional `(err, zip)` callback
 
 Returns a `Promise<Uint8Array>`, or invokes provided `callback`, or the ZIP synchronously when using a custom deflater.
@@ -36,7 +36,7 @@ const zipUint8Array = await createZip([
 ])
 
 // Callback style
-createZip(files, (err, zipUint8Array) => {
+createZip(files, { comment: "Some comment for a zip file" }, (err, zipUint8Array) => {
     // Handle ZIP file content
 })
 
