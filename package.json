@@ -1,6 +1,6 @@
 {
   "name": "@litejs/zip",
-  "version": "25.10.0",
+  "version": "25.10.1",
   "description": "Create ZIP files in Browser or Server",
   "license": "MIT",
   "author": "Lauri Rooden <lauri@rooden.ee>",
