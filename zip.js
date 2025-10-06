@@ -2,7 +2,7 @@
 
 /* globals Blob, Promise, Response */
 
-!((exports, unescape, encodeURIComponent, Uint8Array) => {
+;((exports, unescape, encodeURIComponent, Uint8Array) => {
 
 	// Attach createZip to `window` in non-module context
 	exports.createZip = (files, opts, next) => {
