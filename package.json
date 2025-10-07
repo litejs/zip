@@ -1,7 +1,7 @@
 {
   "name": "@litejs/zip",
   "version": "25.10.1",
-  "description": "Create ZIP files in Browser or Server",
+  "description": "Lightweight (~1.3KB) ZIP file creator for Browser and Node.js. No dependencies",
   "license": "MIT",
   "author": "Lauri Rooden <lauri@rooden.ee>",
   "keywords": [
