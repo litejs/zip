@@ -37,13 +37,12 @@ describe("zip", function() {
 		].map(dummyFile)
 		files[0].time = null
 		files[1].time = Date.UTC(2001,1,22,1,2,4)
-		createZip(files, {
+		var zip = createZip(files, {
 			comment: "Some comment for a file",
-			deflate: file =>zlib.deflateRawSync(file, {level:6}),
-		}, function(err, zip) {
-			assert.matchSnapshot("test/snap/compressed.zip", zip)
-			assert.end()
+			deflate: zlib.deflateRawSync,
 		})
+		assert.matchSnapshot("test/snap/sync.zip", zip)
+		assert.end()
 	})
 
 	function dummyFile(name, i) {

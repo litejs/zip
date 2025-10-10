@@ -48,7 +48,7 @@
 				name = toUtf8(opts && opts.comment)
 				push(toUint(cd + "PK\5\6" + le32(0) + le32((k<<16) + k) + le32(cd.length) + le32(offset) + le16(name.length) + name))
 				file = new Uint8Array(outLen)
-				for (i = 0, offset = 0; (j = out[i++]); offset += j.length) file.set(j, offset);
+				for (i = 0, offset = 0; (j = out[i++]); offset += j.length) file.set(j, offset)
 				return resolve(file)
 			}
 			var fileLen
@@ -79,8 +79,12 @@
 			for (j = 8; j--; ) k = 0xedb88320 * (1&k) ^ k >>> 1
 		}
 
-		if (!next) return new Promise(add)
-		add(next.bind(next, null))
+		if (next) {
+			add(next.bind(next, null))
+		} else if (opts && opts.deflate) {
+			add(file => out = file)
+			return out
+		} else return new Promise(add)
 	}
 
 // this is `exports` in module and `window` in browser
