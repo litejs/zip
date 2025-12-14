@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "allowJs": true,
+    "esModuleInterop": true,
+    "lib": ["es2015"]
+  },
+  "include": ["types.ts"]
+}
