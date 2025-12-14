@@ -45,8 +45,18 @@ describe("zip", function() {
 		assert.end()
 	})
 
+	test("explicit epoch", function(assert) {
+		createZip([
+			{ name: "epoch.txt", content: "x", time: 0 },
+			{ name: "old.txt", content: "x", time: Date.UTC(1975, 0, 1) },
+		])
+		.then(function(zip) {
+			assert.matchSnapshot("test/snap/epoch.zip", zip)
+			assert.end()
+		}, assert.end)
+	})
+
 	function dummyFile(name, i) {
 		return { name: name, content: "File: " + name + "\nContent: äõöüSome stuff".repeat(i+1), time: 1514900750001 }
 	}
 })
-

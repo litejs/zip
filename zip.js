@@ -21,7 +21,7 @@
 			out.push(arr)
 			outLen += arr.length
 		}
-		, dosDate = date => date.getSeconds() >> 1 | date.getMinutes() << 5 | date.getHours() << 11 | date.getDate() << 16 | (date.getMonth() + 1) << 21 | (date.getFullYear() - 1980) << 25
+		, dosDate = date => Math.max(2162688, date.getSeconds() >> 1 | date.getMinutes() << 5 | date.getHours() << 11 | date.getDate() << 16 | (date.getMonth() + 1) << 21 | (date.getFullYear() - 1980) << 25)
 		, le16 = n => String.fromCharCode(n & 0xff, (n >>> 8) & 0xff)
 		, le32 = n => le16(n) + le16(n >>> 16)
 		, toUint = str => {
@@ -65,7 +65,7 @@
 			}
 			compress(file, fileLen, (compressed, method) => {
 				method = file === compressed ? "\0\0" : "\10\0"
-				method = le32(20 | 1<<27) + method + le32(dosDate(new Date(k.time || now))) + le32(-1^crc >>> 0) + le32(compressed.length) + le32(fileLen) + le32(nameLen)
+				method = le32(20 | 1<<27) + method + le32(dosDate(new Date(k.time > 0 || k.time === 0 ? k.time : now))) + le32(-1^crc >>> 0) + le32(compressed.length) + le32(fileLen) + le32(nameLen)
 				push(toUint("PK\3\4" + method + name))
 				push(compressed)
 				cd += "PK\1\2\0\24" + method + "\0\0" + le32(0) + le32(32) + le32(offset) + name
