@@ -9,25 +9,17 @@ const files: ZipFile[] = [
 	{ name: "nullable.txt", content: "x", time: null },
 ]
 
-const promiseZip: Promise<Uint8Array> = createZip(files)
+createZip(files) satisfies Promise<Uint8Array>
 
 createZip(files, { comment: "Zip comment" }, (err, buffer) => {
 	if (err) return
-	buffer.byteLength
+	buffer satisfies Uint8Array
 })
 
 createZip(files, (err, buffer) => {
 	if (err) return
-	buffer.byteLength
+	buffer satisfies Uint8Array
 })
 
 const customDeflate: ZipDeflate = input => input.subarray(0)
-const syncZip: Uint8Array = zip.createZip(files, { deflate: customDeflate })
-syncZip.byteLength
-
-async function consume() {
-	const asyncZip = await promiseZip
-	asyncZip.byteLength
-}
-
-consume()
+zip.createZip(files, { deflate: customDeflate }) satisfies Uint8Array
