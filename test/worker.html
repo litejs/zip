@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>@litejs/zip in a Web Worker</title>
+<link rel="icon" href="data:,">
+<style>
+body { font: 14px/1.6 system-ui, sans-serif; margin: 2rem auto; max-width: 44rem; padding: 0 1rem }
+h1 { font-size: 1.25rem }
+pre { background: #f4f4f4; padding: .75rem; overflow-x: auto }
+code { background: #eee; padding: .1rem .3rem; border-radius: 3px }
+</style>
+
+<h1>@litejs/zip in a Web Worker</h1>
+<p>Builds the same archive on the main thread and inside a worker that pulls in
+<code>zip.js</code> with <code>importScripts</code>. Run it with <code>npx lj ui-test test/worker.html</code>,
+or serve the repo root and open this page.</p>
+
+<pre id="out">running...</pre>
+
+<script src="/node_modules/@litejs/cli/test.js"></script>
+<script src="/zip.js"></script>
+<script>
+describe.onend = function() {
+	out.textContent = describe.output
+}
+
+describe("zip in a worker", function() {
+	// Both files carry an explicit time, so the two builds have to match byte for byte
+	var files = [
+		{ name: "worker.txt", content: "Made by @litejs/zip", time: 0 },
+		{ name: "õäöü.txt", content: "Non-ascii name".repeat(20), time: Date.UTC(2020, 1, 21) }
+	]
+	, stored = { deflate: function(uint) { return uint } }
+	, source = [
+		"importScripts(" + JSON.stringify(location.origin + "/zip.js") + ")",
+		"onmessage = function(e) {",
+		"	try {",
+		"		postMessage({ zip: createZip(e.data, { deflate: function(uint) { return uint } }) })",
+		"	} catch (err) { postMessage({ error: err && err.message || String(err) }) }",
+		"}"
+	].join("\n")
+	, worker = new Worker(URL.createObjectURL(new Blob([source], { type: "text/javascript" })))
+
+	it("should build a zip on the main thread", function(assert) {
+		createZip(files).then(function(zip) {
+			assert.equal(head(zip), "PK\3\4")
+			assert.ok(zip.length > 100)
+			assert.end()
+		}, assert.end)
+	})
+
+	it("should build the same bytes in a worker", function(assert) {
+		var reply
+		, main = createZip(files, stored)
+
+		worker.onmessage = function(e) { reply = e.data }
+		worker.onerror = function(e) { reply = { error: e.message || String(e) } }
+		worker.postMessage(files)
+		wait(50)
+
+		function wait(n) {
+			if (reply) {
+				assert(!reply.error, "worker: " + reply.error)
+				return assert.equal(reply.zip, main).end()
+			}
+			if (!n) return assert(0, "worker did not reply").end()
+			fetch("/zip.js", { cache: "no-store" }).then(function() { wait(n - 1) })
+		}
+	})
+
+	function head(zip) {
+		return zip && String.fromCharCode(zip[0], zip[1], zip[2], zip[3])
+	}
+})
+</script>
+</html>

@@ -15,7 +15,7 @@
 		, cd = ""
 		, out = []
 		, outLen = 0
-		, CompressionStream = (exports.window || global).CompressionStream
+		, CompressionStream = (exports.self || global).CompressionStream
 		, now = Date.now()
 		, push = arr => {
 			out.push(arr)
