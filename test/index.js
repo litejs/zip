@@ -47,8 +47,11 @@ describe("zip", function() {
 
 	test("explicit epoch", function(assert) {
 		createZip([
+			{ name: "pre-epoch.txt", content: "x", time: Date.UTC(1965, 0, 1) },
 			{ name: "epoch.txt", content: "x", time: 0 },
 			{ name: "old.txt", content: "x", time: Date.UTC(1975, 0, 1) },
+			{ name: "future.txt", content: "x", time: Date.UTC(2044, 0, 1) },
+			{ name: "past DOS ceiling.txt", content: "x", time: Date.UTC(2108, 0, 1) },
 		])
 		.then(function(zip) {
 			assert.matchSnapshot("test/snap/epoch.zip", zip)
