@@ -1,6 +1,6 @@
 {
   "name": "@litejs/zip",
-  "version": "26.4.0",
+  "version": "26.8.0",
   "description": "Lightweight (~1.3KB) ZIP file creator for Browser and Node.js. No dependencies",
   "license": "MIT",
   "author": "Lauri Rooden <lauri@rooden.ee>",
