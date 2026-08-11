@@ -72,7 +72,7 @@
 				method = le32(20 | 1<<27) + method + le32(dosDate(new Date(k.time || k.time === 0 ? k.time : now))) + le32(-1^crc >>> 0) + le32(compressed.length) + le32(fileLen) + le32(nameLen)
 				push(toUint("PK\3\4" + method + name))
 				push(compressed)
-				cd += "PK\1\2\0\24" + method + "\0\0" + le32(0) + le32(32) + le32(offset) + name
+				cd += "PK\1\2\24\3" + method + "\0\0" + le32(0) + le32(0x81a40020) + le32(offset) + name
 				offset += 30 + compressed.length + nameLen
 				add(resolve)
 			})
