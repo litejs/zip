@@ -78,6 +78,8 @@
 			})
 		}
 
+		files = files.filter(e => e)
+
 		for (; i; crcTable[i] = k) {
 			k = --i
 			for (j = 8; j--; ) k = 0xedb88320 * (1&k) ^ k >>> 1
