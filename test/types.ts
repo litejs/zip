@@ -1,6 +1,6 @@
 
 
-import zip, { createZip, ZipDeflate, ZipFile } from "../types/zip"
+import zip, { createZip, ZipDeflate, ZipFile } from "../zip"
 
 const files: ZipFile[] = [
 	{ name: "a.txt", content: "Some content" },

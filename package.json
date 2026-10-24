@@ -9,13 +9,13 @@
     "litejs"
   ],
   "main": "zip.js",
-  "types": "types/zip.d.ts",
+  "types": "zip.d.ts",
   "files": [
-    "types/"
+    "zip.d.ts"
   ],
   "repository": "github:litejs/zip",
   "scripts": {
-    "test": "lj t --tz='Europe/Tallinn' test/index.js"
+    "test": "lj t --tz='Europe/Tallinn' test/*.js"
   },
   "devDependencies": {
     "@litejs/cli": "26.6.0"
