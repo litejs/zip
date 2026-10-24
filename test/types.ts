@@ -1,6 +1,7 @@
 
 
 import zip, { createZip, ZipDeflate, ZipFile } from "../zip"
+import { lsZip, catZip, unzip, ZipEntry, ZipRead } from "../unzip"
 
 const files: ZipFile[] = [
 	{ name: "a.txt", content: "Some content" },
@@ -23,3 +24,10 @@ createZip(files, (err, buffer) => {
 
 const customDeflate: ZipDeflate = input => input.subarray(0)
 zip.createZip(files, { deflate: customDeflate }) satisfies Uint8Array
+
+const read: ZipRead = (start, end) => new Uint8Array(0).subarray(start, end)
+lsZip(read, { tail: 1024 }).then((list: ZipEntry[]) => catZip(read, list[0], { inflate: input => input })) satisfies Promise<Uint8Array>
+unzip(new Uint8Array(0)).then(list => list[0].content) satisfies Promise<Uint8Array>
+lsZip(new ArrayBuffer(0)).then(list => catZip(new Uint8Array(0), list[0])) satisfies Promise<Uint8Array>
+unzip(read, { inflate: input => input }) satisfies Promise<ZipEntry[]>
+catZip(read, { name: "", comment: "", time: new Date(), method: 8, crc: 0, len: 0, size: 0, offset: 0, headerLen: 30 }, { inflate: async input => input }) satisfies Promise<Uint8Array>

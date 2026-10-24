@@ -6,18 +6,20 @@
   "author": "Lauri Rooden <lauri@rooden.ee>",
   "keywords": [
     "zip",
+    "unzip",
     "litejs"
   ],
   "main": "zip.js",
   "types": "zip.d.ts",
   "files": [
-    "zip.d.ts"
+    "*.js",
+    "*.d.ts"
   ],
   "repository": "github:litejs/zip",
   "scripts": {
     "test": "lj t --tz='Europe/Tallinn' test/*.js"
   },
   "devDependencies": {
-    "@litejs/cli": "26.6.0"
+    "@litejs/cli": "26.8.0"
   }
 }

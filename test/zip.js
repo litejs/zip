@@ -1,6 +1,8 @@
 
+require("@litejs/cli/test.js")
+require("@litejs/cli/snapshot.js")
+
 describe("zip", function() {
-	require("@litejs/cli/snapshot.js")
 	var zlib = require("zlib")
 	var createZip = require("..").createZip
 
